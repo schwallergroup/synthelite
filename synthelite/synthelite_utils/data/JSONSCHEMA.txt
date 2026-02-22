@@ -1,0 +1,120 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "dependencies": {
+      "type": "object",
+      "patternProperties": {
+        "^[0-9]+$": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step": {
+            "type": "string",
+            "pattern": "^[0-9]+$"
+          },
+          "reactants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "smiles": {
+                  "type": "string"
+                },
+                "reactant_metadata": {
+                  "type": "object"
+                }
+              },
+              "required": ["smiles", "reactant_metadata"]
+            }
+          },
+          "reagents": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "smiles": {
+                  "type": "string"
+                },
+                "reagent_metadata": {
+                  "type": "object"
+                }
+              },
+              "required": ["smiles", "reagent_metadata"]
+            }
+          },
+          "products": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "smiles": {
+                  "type": "string"
+                },
+                "product_metadata": {
+                  "type": "object"
+                }
+              },
+              "required": ["smiles", "product_metadata"]
+            }
+          },
+          "conditions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "temperature": {
+                  "type": "number"
+                },
+                "pressure": {
+                  "type": "number"
+                },
+                "solvent": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "reactionmetrics": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "scalabilityindex": {
+                  "type": "string",
+                  "pattern": "^[1-9]|10$"
+                },
+                "confidenceestimate": {
+                  "type": "string",
+                  "pattern": "^0(\\.[0-9]+)?|1(\\.0+)?$"
+                },
+                "closestliterature": {
+                  "type": "string"
+                },
+                "yield": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                }
+              },
+              "required": ["scalabilityindex", "confidenceestimate", "closestliterature"]
+            }
+          }
+        },
+        "required": ["step", "reactants", "reagents", "products", "reactionmetrics"]
+      }
+    }
+  },
+  "required": ["dependencies", "steps"]
+}

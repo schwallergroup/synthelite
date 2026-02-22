@@ -1,0 +1,85 @@
+[tool.poetry]
+name = "synthelite"
+version = "0.1.1"
+description = "Chemist-aligned and feasibility-aware retrosynthetic route finding with LLM-first guidance."
+authors = ["Laboratory of Artificial Chemical Intelligence <philippe.schwaller@epfl.ch>"]
+license = "MIT"
+include = ["synthelite/data/*.yml", "synthelite/data/templates/*"]
+readme = "README.md"
+homepage = "https://github.com/schwallergroup/synthelite/"
+repository = "https://github.com/schwallergroup/synthelite/"
+documentation = "https://schwallergroup.github.io/synthelite/"
+
+[tool.pytest.ini_options]
+mccabe-complexity = 9
+
+[tool.pylint.'MESSAGES CONTROL']
+max-line-length = 120
+max-args = 7
+max-attributes = 20
+min-public-methods = 0
+disable = "W3101, R0022, W1201, W1203, R0401, W0707, W0221, W0603, R0801, R1735, W1514, C0209, W0237, R1732, W0602, R0914, typecheck"
+
+[tool.poetry.dependencies]
+python = ">=3.9,<3.11"
+ipywidgets = "^7.5.1"
+jinja2 = "^3.0.0"
+jupyter = "^1.0.0"
+jupytext = "^1.3.3"
+notebook = "^6.5.3"
+networkx = "^2.4"
+deprecated = "^1.2.10"
+pandas = "^1.0.0"
+pillow = "^9.0.0"
+requests = "^2.23.0"
+rdchiral = "^1.0.0"
+# rdkit = "^2022.3.3"
+tables = "^3.6.1"
+tqdm = "^4.42.1"
+onnxruntime = "^1.14.0"
+tensorflow = {version = "^2.8.0", optional=true}
+grpcio = {version = "^1.24.0", optional=true}
+tensorflow-serving-api = {version = "^2.1.0", optional=true}
+pymongo = {version = "^3.10.1", optional=true}
+route-distances = {version = "^1.1.1", optional=true}
+scipy = {version = "^1.0", optional=true}
+matplotlib = {version = "^3.0.0", optional=true}
+timeout-decorator = {version = "^0.5.0", optional=true}
+molbloom = {version = "^2.1.0", optional=true}
+paretoset = "^1.2.3"
+seaborn = "^0.13.2"
+reaction-utils = "^1.3.0"
+python-dotenv = "^1.0.0"
+pydantic = "^2.8.2"
+wandb = "^0.17.8"
+chromadb = "^0.5.5"
+steer = {git = "https://www.github.com/schwallergroup/steer.git"}
+sentence-transformers = "^5.1.1"
+the-retry = "^0.1.1"
+tf-keras = "^2.20.1"
+
+[tool.poetry.dev-dependencies]
+black = "^22.0.0"
+invoke = "^1.5.0"
+pytest = "^6.2.2"
+pytest-black = "^0.3.12"
+pytest-cov = "^2.11.0"
+pytest-datadir = "^1.3.1"
+pytest-mock = "^3.5.0"
+pytest-mccabe = "^2.0.0"
+Sphinx = "^7.3.7"
+mypy = "^1.0.0"
+pylint = "^2.16.0"
+
+[tool.poetry.extras]
+all = ["pymongo", "route-distances", "scipy", "matplotlib", "timeout-decorator", "molbloom"]
+tf = ["tensorflow", "grpcio", "tensorflow-serving-api"]
+
+[tool.poetry.scripts]
+synthelite_llm_cli = "synthelite.interfaces.synthelite_llm_cli:main"
+download_public_data = "synthelite.tools.download_public_data:main"
+smiles2stock = "synthelite.tools.make_stock:main"
+
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

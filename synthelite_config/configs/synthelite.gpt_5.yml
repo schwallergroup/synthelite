@@ -1,0 +1,69 @@
+search:
+  algorithm_config:
+    W: 1 # beam width
+    immediate_instantiation: [llm_guided, llm_guided_base]
+    prune_cycles_in_search: true
+    search_rewards: ["state score"]
+    C: 0.5 # exploration constant
+  query_explore_iteration_limit: 150 # number of MCTS iterations in Phase 2
+  llm_guidance:
+    enabled: true
+    n_runs: 3
+    step_limit: 25 # LLM-guided step limit in Phase 1
+    template_search:
+      similarity_threshold: 0.8
+      max_templates: 30000
+      max_actions: 1
+      selection_type: 'select' # 'select' or 'verify'
+    next_step_generator:
+      model: "gpt-5"
+      temperature: 1
+
+template_search:
+  csv_path: "data/synthelite/uspto_templates.text-embedding-ada-002.csv"
+
+route_validator:
+  model: "gpt-5"
+  temperature: 1
+
+expansion:
+  llm_guided_base:
+    type: synthelite.context.policy.DynamicLLMGuidedExpansionWithVerifierStrategy
+    use_rdchiral: false
+
+  uspto:
+    - data/azf/uspto_model.onnx
+    - data/azf/uspto_templates.csv.gz
+
+  ringbreaker:
+    - data/azf/uspto_ringbreaker_model.onnx
+    - data/azf/uspto_ringbreaker_templates.csv.gz
+
+  multi_expansion_strategy:
+    type: synthelite.context.policy.MultiExpansionStrategy
+    expansion_strategies: [uspto, ringbreaker]
+    additive_expansion: True
+
+  llm_guided:
+    type: synthelite.context.policy.MultiExpansionPolicyLLMFallback
+    llm_policy_key: llm_guided_base
+    fallback_policy_key: multi_expansion_strategy
+    cutoff_number: 20
+    ignore_stock: true
+
+  llm_query_explorer:
+    type: synthelite.context.policy.LLMQueriedExpansionStrategy
+    cutoff_search_similarity: 0.8
+    cutoff_search_templates: 30000
+    cutoff_number: 50
+    use_rdchiral: false
+    ignore_stock: true
+
+filter:
+  uspto: data/azf/uspto_filter_model.onnx
+
+stock:
+  emolecule: data/stocks/eMolecule.csv
+
+post_processing:
+  max_routes: 30
