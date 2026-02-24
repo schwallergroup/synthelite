@@ -6,7 +6,7 @@ import sys
 
 import requests
 import tqdm
-
+from huggingface_hub import hf_hub_download
 from synthelite.chem.mol import Molecule
 import pandas as pd
 
@@ -31,32 +31,19 @@ FILES_TO_DOWNLOAD = {
         "filename": "azf/uspto_filter_model.onnx",
         "url": "https://zenodo.org/record/7797465/files/uspto_filter_model.onnx",
     },
-    "zinc_stock": {
-        "filename": "stocks/zinc_stock.hdf5",
-        "url": "https://ndownloader.figshare.com/files/23086469",
-    },
+    # "zinc_stock": {
+    #     "filename": "stocks/zinc_stock.hdf5",
+    #     "url": "https://ndownloader.figshare.com/files/23086469",
+    # },
     "eMolecule_stock": {
-        "filename": "stocks/eMolecule.csv",
-        "url": "https://zenodo.org/records/17883640/files/eMolecule.csv",
+        "local_dir": "stocks",
+        "hf_remote_path": "stocks/eMolecule.csv",
     },
     "synthelite_template_file": {
-        "filename": "synthelite/uspto_templates.text-embedding-ada-002.csv",
-        "url": "https://zenodo.org/records/17883640/files/uspto_templates.text-embedding-ada-002.csv",
+        "local_dir": "reaction_templates",
+        "hf_remote_path": "reaction_templates/uspto_templates.text-embedding-ada-002.csv",
     },
 }
-
-YAML_TEMPLATE = """expansion:
-  uspto:
-    - {}
-    - {}
-  ringbreaker:
-    - {}
-    - {}
-filter:
-  uspto: {}
-stock:
-  zinc: {}
-"""
 
 
 def _get_inchi_key(smiles: str) -> str:
@@ -71,6 +58,9 @@ def _convert_stock_to_azf_format(source_file: str, target_file: str) -> None:
 
 
 def _download_file(url: str, filename: str) -> None:
+    if os.path.exists(filename):
+        print(f"File {filename} already exists, skipping download.")
+        return
     with requests.get(url, stream=True) as response:
         response.raise_for_status()
         total_size = int(response.headers.get("content-length", 0))
@@ -83,6 +73,19 @@ def _download_file(url: str, filename: str) -> None:
                 pbar.update(len(chunk))
         pbar.close()
 
+def _download_file_hf(local_dir: str, remote_path: str) -> None:
+    filename = os.path.basename(remote_path)
+    filepath = os.path.join(local_dir, filename)
+    if os.path.exists(filepath):
+        print(f"File {filepath} already exists, skipping download.")
+        return
+
+    path = hf_hub_download(
+        repo_id="SchwallerGroup/synthelite",
+        filename=remote_path,
+        repo_type="dataset",
+        local_dir=local_dir
+    )
 
 def main() -> None:
     """Entry-point for CLI"""
@@ -96,28 +99,13 @@ def main() -> None:
 
     try:
         for filespec in FILES_TO_DOWNLOAD.values():
-            _download_file(filespec["url"], os.path.join(path, filespec["filename"]))
+            if "url" in filespec:
+                _download_file(filespec["url"], os.path.join(path, filespec["filename"]))
+            elif "hf_remote_path" in filespec:
+                _download_file_hf(filespec["local_dir"], os.path.join(path, filespec["hf_remote_path"]))
     except requests.HTTPError as err:
         print(f"Download failed with message {str(err)}")
         sys.exit(1)
-
-    # with open(os.path.join(path, "config.yml"), "w") as fileobj:
-    #     path = os.path.abspath(path)
-    #     fileobj.write(
-    #         YAML_TEMPLATE.format(
-    #             os.path.join(path, FILES_TO_DOWNLOAD["policy_model_onnx"]["filename"]),
-    #             os.path.join(path, FILES_TO_DOWNLOAD["template_file"]["filename"]),
-    #             os.path.join(
-    #                 path, FILES_TO_DOWNLOAD["ringbreaker_model_onnx"]["filename"]
-    #             ),
-    #             os.path.join(
-    #                 path, FILES_TO_DOWNLOAD["ringbreaker_templates"]["filename"]
-    #             ),
-    #             os.path.join(path, FILES_TO_DOWNLOAD["filter_policy_onnx"]["filename"]),
-    #             os.path.join(path, FILES_TO_DOWNLOAD["stock"]["filename"]),
-    #         )
-    #     )
-    # print("Configuration file written to config.yml")
 
 
 if __name__ == "__main__":
