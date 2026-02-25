@@ -32,7 +32,7 @@ To use the tool you need:
 1. An `.env` file containing an OpenRouter key as `OPENROUTER_API_KEY`, an OpenAI key (for query embedding) stored as `OPENAI_API_KEY`, and the location on WandB where you want to stream out the LLMs output as `WANDB_PROJECT`.
 2. A stock file containing buyable molecules. We use `eMolecule` for our experiments.
 3. An LLM-annotated reaction templates.
-4. AiZynthFinder policies model. The policies are used as fallback to propose reactions in cases the template search process fails to find one that matches the LLMs' strategy. The final reaction is still decided by the LLMs.
+4. AiZynthFinder policies model. The policies are used as fallback to propose reactions in cases the template search process fails to find one that matches the LLMs' strategy. The final reaction is still selected by the LLMs.
 
 To set up `.env` and download the necessary files, run:
 ```bash
@@ -68,6 +68,44 @@ A result directory will be created for each case, containing multiple `.json` fi
 The final routes are stored in file `routes.llm_query_explorer.json`.
 
 For more information, please take a look at the example in `example/simple_launch`.
+
+## Experiments
+
+Full reproduction of the results in the preprint requires considerable time and API budget.
+We therefore provide the precomputed routes used to produce the figures in the paper on HuggingFace at [`SchwallerGroup/synthelite`](https://huggingface.co/datasets/SchwallerGroup/synthelite).
+
+The routes are organized by experiment and model:
+```
+routes/
+├── strategic/          # Strategic synthesis planning experiments
+│   ├── gemini2_5/
+│   ├── claude4_5/
+│   └── gpt5/
+├── starting_materials/ # Starting-material-constrained experiments
+│   ├── gemini2_5/
+│   ├── claude4_5/
+│   └── gpt5/
+└── uspto_190/          # USPTO-190 benchmark (zipped)
+    ├── gemini2_5.zip
+    ├── claude4_5.zip
+    └── gpt5.zip
+```
+
+To download all routes:
+```bash
+download_routes --output_dir data/routes
+```
+
+You can also download a subset by specifying experiments and/or models:
+```bash
+# Only the strategic experiment with Claude 4.5
+download_routes --output_dir data/routes --experiments strategic --models claude4_5
+
+# USPTO-190 results for all models
+download_routes --output_dir data/routes --experiments uspto_190
+```
+
+Zip files are automatically extracted after download. Use `--no-unzip` to skip extraction.
 
 ## Acknowledgement
 

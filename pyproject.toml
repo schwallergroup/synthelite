@@ -78,6 +78,7 @@ tf = ["tensorflow", "grpcio", "tensorflow-serving-api"]
 [tool.poetry.scripts]
 synthelite_llm_cli = "synthelite.interfaces.synthelite_llm_cli:main"
 download_public_data = "synthelite.tools.download_public_data:main"
+download_routes = "synthelite.tools.download_routes:main"
 smiles2stock = "synthelite.tools.make_stock:main"
 
 [build-system]
