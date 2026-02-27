@@ -71,7 +71,8 @@ For more information, please take a look at the example in `example/simple_launc
 
 ## Experiments
 
-Full reproduction of the results in the preprint requires considerable time and API budget.
+We provide the benchmarks used in the preprint in [`benchmark/`](benchmark/).
+However, full reproduction of the results in the preprint requires considerable time and API budget.
 We therefore provide the precomputed routes used to produce the figures in the paper on HuggingFace at [`SchwallerGroup/synthelite`](https://huggingface.co/datasets/SchwallerGroup/synthelite).
 
 The routes are organized by experiment and model:
