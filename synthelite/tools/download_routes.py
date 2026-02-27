@@ -15,11 +15,11 @@ HF_REPO_ID = "SchwallerGroup/synthelite"
 ROUTE_PREFIX = "routes"
 
 EXPERIMENTS = ["strategic", "starting_materials", "uspto_190"]
-MODELS = ["gemini2_5", "claude4_5", "gpt5"]
+MODELS = ["gemini_2_5", "claude_4_5", "gpt_5"]
 
 
 def download_routes(
-    output_dir: str = "data/routes",
+    output_dir: str = "data/",
     experiments: list[str] | None = None,
     models: list[str] | None = None,
     unzip: bool = True,
@@ -76,7 +76,7 @@ def main() -> None:
     )
     parser.add_argument(
         "--output_dir",
-        default="data/routes",
+        default="data/",
         help="Directory to save routes (default: data/routes)",
     )
     parser.add_argument(

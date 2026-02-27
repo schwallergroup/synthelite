@@ -108,8 +108,8 @@ class _SearchConfiguration:
     break_bonds: List[List[int]] = field(default_factory=list)
     freeze_bonds: List[List[int]] = field(default_factory=list)
     break_bonds_operator: str = "and"
-    steer: _SteerConfiguration = _SteerConfiguration()
-    llm_guidance: _LLMGuidanceConfiguration = _LLMGuidanceConfiguration()
+    steer: _SteerConfiguration = field(default_factory=_SteerConfiguration)
+    llm_guidance: _LLMGuidanceConfiguration = field(default_factory=_LLMGuidanceConfiguration)
 
 
 @dataclass

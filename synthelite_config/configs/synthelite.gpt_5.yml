@@ -20,7 +20,7 @@ search:
       temperature: 1
 
 template_search:
-  csv_path: "data/synthelite/uspto_templates.text-embedding-ada-002.csv"
+  csv_path: "data/reaction_templates/uspto_templates.text-embedding-ada-002.csv"
 
 route_validator:
   model: "gpt-5"

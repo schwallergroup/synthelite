@@ -24,6 +24,7 @@ First clone the repository using Git, then execute the following commands in the
     conda activate synthelite
     export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
     poetry install --all-extras
+    pip install -e . --no-deps
 
 the `synthelite` package is now installed in editable mode.
 
@@ -41,7 +42,7 @@ sh set_up.sh
 
 Or if you already have the `.env` file and only wish to download the others:
 ```
-download_public_data data/
+download_synthelite_data data/
 ```
 If you want to install the files elsewhere rather than `data/`, change the file locations accordingly in the config files (see [synthelite_config/configs](synthelite_config/configs)).
 
@@ -93,16 +94,16 @@ routes/
 
 To download all routes:
 ```bash
-download_routes --output_dir data/routes
+download_synthelite_routes --output_dir data/
 ```
 
 You can also download a subset by specifying experiments and/or models:
 ```bash
 # Only the strategic experiment with Claude 4.5
-download_routes --output_dir data/routes --experiments strategic --models claude4_5
+download_synthelite_routes --output_dir data/ --experiments strategic --models claude4_5
 
 # USPTO-190 results for all models
-download_routes --output_dir data/routes --experiments uspto_190
+download_synthelite_routes --output_dir data/ --experiments uspto_190
 ```
 
 Zip files are automatically extracted after download. Use `--no-unzip` to skip extraction.

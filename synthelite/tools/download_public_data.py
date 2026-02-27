@@ -36,11 +36,11 @@ FILES_TO_DOWNLOAD = {
     #     "url": "https://ndownloader.figshare.com/files/23086469",
     # },
     "eMolecule_stock": {
-        "local_dir": "stocks",
+        # "local_dir": "stocks",
         "hf_remote_path": "stocks/eMolecule.csv",
     },
     "synthelite_template_file": {
-        "local_dir": "reaction_templates",
+        # "local_dir": "reaction_templates",
         "hf_remote_path": "reaction_templates/uspto_templates.text-embedding-ada-002.csv",
     },
 }
@@ -61,6 +61,8 @@ def _download_file(url: str, filename: str) -> None:
     if os.path.exists(filename):
         print(f"File {filename} already exists, skipping download.")
         return
+    
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
     with requests.get(url, stream=True) as response:
         response.raise_for_status()
         total_size = int(response.headers.get("content-length", 0))
@@ -73,13 +75,14 @@ def _download_file(url: str, filename: str) -> None:
                 pbar.update(len(chunk))
         pbar.close()
 
-def _download_file_hf(local_dir: str, remote_path: str) -> None:
+def _download_file_hf(remote_path: str, local_dir: str) -> None:
     filename = os.path.basename(remote_path)
     filepath = os.path.join(local_dir, filename)
     if os.path.exists(filepath):
         print(f"File {filepath} already exists, skipping download.")
         return
 
+    os.makedirs(local_dir, exist_ok=True)
     path = hf_hub_download(
         repo_id="SchwallerGroup/synthelite",
         filename=remote_path,
@@ -102,7 +105,7 @@ def main() -> None:
             if "url" in filespec:
                 _download_file(filespec["url"], os.path.join(path, filespec["filename"]))
             elif "hf_remote_path" in filespec:
-                _download_file_hf(filespec["local_dir"], os.path.join(path, filespec["hf_remote_path"]))
+                _download_file_hf(filespec["hf_remote_path"], path)
     except requests.HTTPError as err:
         print(f"Download failed with message {str(err)}")
         sys.exit(1)

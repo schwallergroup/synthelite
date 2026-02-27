@@ -18,13 +18,15 @@ search:
     next_step_generator:
       model: "claude-sonnet-4-5-20250929"
       temperature: 0.1
+      backend: 'litellm'
 
 template_search:
-  csv_path: "data/synthelite/uspto_templates.text-embedding-ada-002.csv"
+  csv_path: "data/reaction_templates/uspto_templates.text-embedding-ada-002.csv"
 
 route_validator:
   model: "claude-sonnet-4-5-20250929"
   temperature: 0.1
+  backend: 'litellm'
 
 expansion:
   llm_guided_base:

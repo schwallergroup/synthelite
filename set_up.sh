@@ -19,4 +19,4 @@ EOF
 fi
 
 echo "Downloading necessary data..."
-download_public_data data/
+download_synthelite_data data/
