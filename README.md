@@ -24,7 +24,6 @@ First clone the repository using Git, then execute the following commands in the
     conda activate synthelite
     export PYTHON_KEYRING_BACKEND=keyring.backends.null.Keyring
     poetry install --all-extras
-    pip install -e . --no-deps
 
 the `synthelite` package is now installed in editable mode.
 
