@@ -151,7 +151,6 @@ config_local.yml
 devtools/seldon-output-*/
 
 *.hdf5
-*.png
 *.smi
 *.gz
 wandb/*
@@ -167,7 +166,6 @@ data/
 simple_launch/steer*/
 
 *.tsv
-*.png
 *.json
 *.pickle
 *.onnx
