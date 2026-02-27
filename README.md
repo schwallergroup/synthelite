@@ -4,6 +4,10 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 
 
+<p style="text-align: center;">
+  <img src="./figs/demo.png" alt="Demo" width="90%"/>
+</p>
+
 
 ## Overview
 Synthelite is a Computer-Aided Synthesis Planning (CASP) software central around LLMs. While LLMs are potent reaction policy, their high computational cost hinder their use in traditional CASP tools which are typically based on explorative search with cheap policies.
